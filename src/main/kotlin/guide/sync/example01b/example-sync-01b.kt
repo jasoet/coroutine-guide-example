@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// This file was automatically generated from coroutines-guide.md by Knit tool. Do not edit.
+
 package guide.sync.example01b
 
 import kotlinx.coroutines.experimental.launch
