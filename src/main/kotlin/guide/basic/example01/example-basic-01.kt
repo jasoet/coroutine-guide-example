@@ -18,15 +18,27 @@
 package guide.basic.example01
 
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
+import java.util.Random
 
 fun main(args: Array<String>) {
-    launch(CommonPool) {
-        // create new coroutine in common thread pool
-        delay(1000L) // non-blocking delay for 1 second (default time unit is ms)
-        println("World!") // print after delay
+    runBlocking(CommonPool) {
+        (20..30)
+                .map { i ->
+                    async(context) {
+                        workHard(i, "Test $i")
+                    }
+                }
+                .map { it.await() }
+
     }
-    println("Hello,") // main function continues while coroutine is delayed
-    Thread.sleep(2000L) // block main thread for 2 seconds to keep JVM alive
+}
+
+suspend fun workHard(repeat: Int, text: String) {
+    val rand = Random().nextLong() % 20
+    val delay = Math.abs(100 * rand)
+    delay(delay)
+    println("$text > $delay")
 }
